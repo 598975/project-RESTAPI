@@ -1,0 +1,6 @@
+@DAT250_REST_HostAddress = http://localhost:5232
+
+GET {{DAT250_REST_HostAddress}}//
+Accept: application/json
+
+###
