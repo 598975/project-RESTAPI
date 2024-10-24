@@ -1,9 +1,10 @@
 ﻿using DAT250_REST.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAT250_REST.Data
 {
-    public class AppDBContext: DbContext
+    public class AppDBContext: IdentityDbContext
     {
         protected readonly IConfiguration Configuration;
         public AppDBContext(IConfiguration Configuration)
@@ -19,6 +20,11 @@ namespace DAT250_REST.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<VoteOption> VoteOptions { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
 
 
     }
