@@ -24,15 +24,15 @@ namespace DAT250_REST.Messaging
             _channel = _connection.CreateModel();
         }
 
-        public async Task PublishMessageAsync(String message, string queueName)
+        public async Task PublishMessageAsync(T message, string queueName)
         {
             if (message == null)
             {
                 return;
             }
             _channel.QueueDeclare(queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            //var messageJson = JsonConvert.SerializeObject(message);
-            var body = Encoding.UTF8.GetBytes(message);
+            var messageJson = JsonConvert.SerializeObject(message);
+            var body = Encoding.UTF8.GetBytes(messageJson);
             var properties = _channel.CreateBasicProperties();
             properties.ContentType = "application/json";
             await Task.Run(() => _channel.BasicPublish(exchange: "vote-events-exchange", routingKey: "vote.event", basicProperties: properties, body: body));
