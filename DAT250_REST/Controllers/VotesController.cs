@@ -4,6 +4,7 @@ using DAT250_REST.Data;
 using DAT250_REST.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using DAT250_REST.Messaging;
 
 namespace DAT250_REST.Controllers
 {
@@ -13,10 +14,12 @@ namespace DAT250_REST.Controllers
     public class VotesController : ControllerBase
     {
         private readonly AppDBContext _context;
+        private readonly RabbitMqClient<Vote> _rabbitMqClient;
 
         public VotesController(AppDBContext context)
         {
             _context = context;
+            _rabbitMqClient = new RabbitMqClient<Vote>();
         }
 
         // GET: api/Votes
@@ -89,7 +92,7 @@ namespace DAT250_REST.Controllers
 
             _context.Votes.Add(vote);
             await _context.SaveChangesAsync();
-
+            await _rabbitMqClient.PublishMessageAsync(vote, "pollapp-analytics-queue");
             return CreatedAtAction("GetVote", new { id = vote.Id }, vote);
         }
 
