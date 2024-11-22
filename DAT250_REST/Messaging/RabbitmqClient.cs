@@ -31,7 +31,11 @@ namespace DAT250_REST.Messaging
                 return;
             }
             _channel.QueueDeclare(queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            var messageJson = JsonConvert.SerializeObject(message);
+            var messageJson = JsonConvert.SerializeObject(message, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
+            });
             var body = Encoding.UTF8.GetBytes(messageJson);
             var properties = _channel.CreateBasicProperties();
             properties.ContentType = "application/json";
