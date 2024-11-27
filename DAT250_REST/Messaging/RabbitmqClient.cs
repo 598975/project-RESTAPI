@@ -14,13 +14,14 @@ namespace DAT250_REST.Messaging
 
         public RabbitMqClient()
         {
-            var factory = new ConnectionFactory
+            ConnectionFactory factory = new()
             {
-                HostName = "localhost",
+                HostName = "host.docker.internal",
                 UserName = "myuser",
-                Password = "secret"
+                Password = "secret",
+                Port = 5672
             };
-             _connection = factory.CreateConnection();
+            _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
         }
 
